@@ -50,6 +50,14 @@ pub fn new_foundation<'a, T: Into<SpecParams<'a>>>(params: T) -> Spec {
     )
 }
 
+/// Create a new Ethereum Genesys mainnet chain spec.
+pub fn new_genesys<'a, T: Into<SpecParams<'a>>>(params: T) -> Spec {
+    load(
+        params.into(),
+        include_bytes!("../../res/ethereum/genesys.json"),
+    )
+}
+
 /// Create a new POA Network mainnet chain spec.
 pub fn new_poanet<'a, T: Into<SpecParams<'a>>>(params: T) -> Spec {
     load(
