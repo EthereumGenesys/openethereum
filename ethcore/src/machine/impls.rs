@@ -61,6 +61,12 @@ pub struct EthashExtensions {
     pub dao_hardfork_beneficiary: Address,
     /// DAO hard-fork DAO accounts list (L)
     pub dao_hardfork_accounts: Vec<Address>,
+    /// Genesys hard-fork transition block (X).
+    pub genesys_hardfork_transition: u64,
+    /// Genesys hard-fork refund contract address (C).
+    pub genesys_hardfork_beneficiary: Address,
+    /// Genesys hard-fork DAO accounts list (L)
+    pub genesys_hardfork_accounts: Vec<Address>,
 }
 
 impl From<::ethjson::spec::EthashParams> for EthashExtensions {
@@ -75,6 +81,18 @@ impl From<::ethjson::spec::EthashParams> for EthashExtensions {
                 .map_or_else(Address::new, Into::into),
             dao_hardfork_accounts: p
                 .dao_hardfork_accounts
+                .unwrap_or_else(Vec::new)
+                .into_iter()
+                .map(Into::into)
+                .collect(),
+            genesys_hardfork_transition: p
+                .genesys_hardfork_transition
+                .map_or(u64::max_value(), Into::into),
+            genesys_hardfork_beneficiary: p
+                .genesys_hardfork_beneficiary
+                .map_or_else(Address::new, Into::into),
+            genesys_hardfork_accounts: p
+                .genesys_hardfork_accounts
                 .unwrap_or_else(Vec::new)
                 .into_iter()
                 .map(Into::into)
@@ -248,6 +266,14 @@ impl EthereumMachine {
                 let state = block.state_mut();
                 for child in &ethash_params.dao_hardfork_accounts {
                     let beneficiary = &ethash_params.dao_hardfork_beneficiary;
+                    state.balance(child).and_then(|b| {
+                        state.transfer_balance(child, beneficiary, &b, CleanupMode::NoEmpty)
+                    })?;
+                }
+            } else if block.header.number() == ethash_params.genesys_hardfork_transition {
+                let state = block.state_mut();
+                for child in &ethash_params.genesys_hardfork_accounts {
+                    let beneficiary = &ethash_params.genesys_hardfork_beneficiary;
                     state.balance(child).and_then(|b| {
                         state.transfer_balance(child, beneficiary, &b, CleanupMode::NoEmpty)
                     })?;

@@ -687,6 +687,7 @@ impl Spec {
                 for block in &[
                     ethash.params.homestead_transition,
                     ethash.params.dao_hardfork_transition,
+                    ethash.params.genesys_hardfork_transition,
                 ] {
                     if let Some(block) = *block {
                         hard_forks.insert(block.into());

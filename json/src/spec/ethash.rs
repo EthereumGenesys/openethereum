@@ -70,6 +70,13 @@ pub struct EthashParams {
     pub dao_hardfork_accounts: Option<Vec<Address>>,
 
     /// See main EthashParams docs.
+    pub genesys_hardfork_transition: Option<Uint>,
+    /// See main EthashParams docs.
+    pub genesys_hardfork_beneficiary: Option<Address>,
+    /// See main EthashParams docs.
+    pub genesys_hardfork_accounts: Option<Vec<Address>>,
+
+    /// See main EthashParams docs.
     pub difficulty_hardfork_transition: Option<Uint>,
     /// See main EthashParams docs.
     #[serde(default, deserialize_with = "uint::validate_optional_non_zero")]
@@ -193,6 +200,9 @@ mod tests {
                         Address(H160::from("0xbb9bc244d798123fde783fcc1c72d3bb8c189413")),
                         Address(H160::from("0x807640a13483f8ac783c557fcdf27be11ea4ac7a")),
                     ]),
+                    genesys_hardfork_transition: None,
+                    genesys_hardfork_beneficiary: None,
+                    genesys_hardfork_accounts: None,
                     difficulty_hardfork_transition: Some(Uint(U256::from(0x59d9))),
                     difficulty_hardfork_bound_divisor: Some(Uint(U256::from(0x0200))),
                     bomb_defuse_transition: Some(Uint(U256::from(0x41))),
@@ -234,6 +244,9 @@ mod tests {
                     dao_hardfork_transition: None,
                     dao_hardfork_beneficiary: None,
                     dao_hardfork_accounts: None,
+                    genesys_hardfork_transition: None,
+                    genesys_hardfork_beneficiary: None,
+                    genesys_hardfork_accounts: None,
                     difficulty_hardfork_transition: None,
                     difficulty_hardfork_bound_divisor: None,
                     bomb_defuse_transition: None,
