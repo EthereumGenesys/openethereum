@@ -133,6 +133,12 @@
 					"0xbb9bc244d798123fde783fcc1c72d3bb8c189413",
 					"0x807640a13483f8ac783c557fcdf27be11ea4ac7a"
 				],
+				"genesysHardforkTransition": "0xba02d0",
+				"genesysHardforkDifficulty": "0x112a880",
+				"genesysHardforkBeneficiary": "0x00000000219ab540356cbb839cbe05303d7705fa",
+				"genesysHardforkAccounts": [
+					"0x84103fcaeb28be34f8b4da8017c126a260385a1e"
+				],
 				"eip100bTransition": "0x42ae50",
 				"difficultyBombDelays": {
 					"0x42ae50": "0x2dc6c0",

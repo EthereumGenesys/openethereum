@@ -72,6 +72,8 @@ pub struct EthashParams {
     /// See main EthashParams docs.
     pub genesys_hardfork_transition: Option<Uint>,
     /// See main EthashParams docs.
+    pub genesys_hardfork_difficulty: Option<Uint>,
+    /// See main EthashParams docs.
     pub genesys_hardfork_beneficiary: Option<Address>,
     /// See main EthashParams docs.
     pub genesys_hardfork_accounts: Option<Vec<Address>>,
@@ -201,6 +203,7 @@ mod tests {
                         Address(H160::from("0x807640a13483f8ac783c557fcdf27be11ea4ac7a")),
                     ]),
                     genesys_hardfork_transition: None,
+                    genesys_hardfork_difficulty: None,
                     genesys_hardfork_beneficiary: None,
                     genesys_hardfork_accounts: None,
                     difficulty_hardfork_transition: Some(Uint(U256::from(0x59d9))),
@@ -245,6 +248,7 @@ mod tests {
                     dao_hardfork_beneficiary: None,
                     dao_hardfork_accounts: None,
                     genesys_hardfork_transition: None,
+                    genesys_hardfork_difficulty: None,
                     genesys_hardfork_beneficiary: None,
                     genesys_hardfork_accounts: None,
                     difficulty_hardfork_transition: None,

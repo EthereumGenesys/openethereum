@@ -109,6 +109,10 @@ pub struct EthashParams {
     pub difficulty_bomb_delays: BTreeMap<BlockNumber, BlockNumber>,
     /// Block to transition to progpow
     pub progpow_transition: u64,
+    /// Transition block for Ethereum Genesys.
+    pub genesys_hardfork_transition: u64,
+    /// Transition block for Ethereum Genesys difficulty.
+    pub genesys_hardfork_difficulty: u64,
 }
 
 impl From<ethjson::spec::EthashParams> for EthashParams {
@@ -171,6 +175,12 @@ impl From<ethjson::spec::EthashParams> for EthashParams {
                 .into_iter()
                 .map(|(block, delay)| (block.into(), delay.into()))
                 .collect(),
+            genesys_hardfork_transition: p
+                .genesys_hardfork_transition
+                .map_or(u64::max_value(), Into::into),
+            genesys_hardfork_difficulty: p
+                .genesys_hardfork_difficulty
+                .map_or(u64::max_value(), Into::into),
         }
     }
 }
@@ -453,6 +463,10 @@ impl Ethash {
             panic!("Can't calculate genesis block difficulty");
         }
 
+        if header.number() == self.ethash_params.genesys_hardfork_transition {
+            return U256::from(self.ethash_params.genesys_hardfork_difficulty);
+        }
+
         let parent_has_uncles = parent.uncles_hash() != &KECCAK_EMPTY_LIST_RLP;
 
         let min_difficulty = self.ethash_params.minimum_difficulty;
@@ -511,19 +525,23 @@ impl Ethash {
             }
         };
         target = cmp::max(min_difficulty, target);
-        if header.number() < self.ethash_params.bomb_defuse_transition {
-            let mut number = header.number();
-            let original_number = number;
-            for (block, delay) in &self.ethash_params.difficulty_bomb_delays {
-                if original_number >= *block {
-                    number = number.saturating_sub(*delay);
+
+        if header.number() <= self.ethash_params.genesys_hardfork_transition {
+            if header.number() < self.ethash_params.bomb_defuse_transition {
+                let mut number = header.number();
+                let original_number = number;
+                for (block, delay) in &self.ethash_params.difficulty_bomb_delays {
+                    if original_number >= *block {
+                        number = number.saturating_sub(*delay);
+                    }
+                }
+                let period = (number / EXP_DIFF_PERIOD) as usize;
+                if period > 1 {
+                    target = cmp::max(min_difficulty, target + (U256::from(1) << (period - 2)));
                 }
             }
-            let period = (number / EXP_DIFF_PERIOD) as usize;
-            if period > 1 {
-                target = cmp::max(min_difficulty, target + (U256::from(1) << (period - 2)));
-            }
         }
+
         target
     }
 }
@@ -589,6 +607,8 @@ mod tests {
             block_reward_contract_transition: 0,
             difficulty_bomb_delays: BTreeMap::new(),
             progpow_transition: u64::max_value(),
+            genesys_hardfork_transition: u64::max_value(),
+            genesys_hardfork_difficulty: u64::max_value(),
         }
     }
 
