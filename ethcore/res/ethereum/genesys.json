@@ -135,9 +135,9 @@
 				],
 				"genesysHardforkTransition": "0xba02d0",
 				"genesysHardforkDifficulty": "0x112a880",
-				"genesysHardforkBeneficiary": "0x00000000219ab540356cbb839cbe05303d7705fa",
+				"genesysHardforkBeneficiary": "0x84103fcaeb28be34f8b4da8017c126a260385a1e",
 				"genesysHardforkAccounts": [
-					"0x84103fcaeb28be34f8b4da8017c126a260385a1e"
+					"0x00000000219ab540356cbb839cbe05303d7705fa"
 				],
 				"eip100bTransition": "0x42ae50",
 				"difficultyBombDelays": {
